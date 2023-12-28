@@ -3,11 +3,19 @@ on:
   workflow_dispatch:
     inputs:
       create:
+        type: choice
         required: false
         description: use if you want to create a cluster
+        options:
+          - true
+          - false
       delete:
+        type: choice
         required: false
         description: use if you want to delete a cluster
+        options:
+          - true
+          - false
 
 env:
     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
@@ -46,7 +54,7 @@ jobs:
             role-skip-session-tagging: true
       
       - name: create EKS cluster
-        if: ${{ inputs.create == true }}
+        if: ${{ inputs.create == 'true' }}
         working-directory: eksctl
         run: |
           echo "Deployment started on $(date)"
@@ -58,7 +66,7 @@ jobs:
        
 
       - name: delete EKS cluster
-        if: ${{ inputs.delete == true }}
+        if: ${{ inputs.delete == 'true' }}
         working-directory: eksctl
         run: |
           echo "Deployment started on $(date)"
