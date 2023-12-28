@@ -2,21 +2,17 @@ name: Deploy EKS cluster
 on:
   workflow_dispatch:
     inputs:
-      create:
+      action:
         type: choice
         required: false
         description: use if you want to create a cluster
         options:
-          - true
-          - false
-      delete:
-        type: choice
+          - create
+          - delete
+      cluster_name:
         required: false
-        description: use if you want to delete a cluster
-        options:
-          - true
-          - false
-
+        description: cluster to delete
+            
 env:
     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -54,7 +50,7 @@ jobs:
             role-skip-session-tagging: true
       
       - name: create EKS cluster
-        if: ${{ inputs.create == 'true' }}
+        if: ${{ inputs.action == 'create' }}
         working-directory: eksctl
         run: |
           echo "Deployment started on $(date)"
@@ -66,19 +62,17 @@ jobs:
        
 
       - name: delete EKS cluster
-        if: ${{ inputs.delete == 'true' }}
+        if: ${{ inputs.action == 'delete' }}
         working-directory: eksctl
+        env:
+            CLUSTER_NAME: ${{ inputs.cluster_name }}
         run: |
           echo "Deployment started on $(date)"
           echo Deploying EKS cluster: stage $ENVIRONMENT_STAGE
           export PATH=$HOME/bin:$PATH 
           echo deleting cluster...
 
-        #   eksctl create cluster --configure-file=create-initial-cluster.yml
-    
-    
-
-          
+        #   eksctl delete cluster --region eu-west-1 --name $CLUSTER_NAME
           
       - name: Post build step
         run: echo "Deployment completed on $(date)"
