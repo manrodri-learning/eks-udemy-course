@@ -24,7 +24,7 @@ jobs:
       - name: install eksctl
         run: |
            curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C .
-           chmod +x /tmp/eksctl
+           chmod +x ./eksctl
            cp ./eksctl $HOME/bin/eksctl && export PATH=$HOME/bin/eksctl:$PATH          
            ls -l $HOME/bin/eksctl
            ./$HOME/bin/eksctl version
