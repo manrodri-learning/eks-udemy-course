@@ -8,7 +8,7 @@ env:
     ENVIRONMENT_STAGE: dev
 
 jobs:
-  ci:
+  deploy_cluster:
     runs-on: ubuntu-latest
     steps:
       - name: install aws cli
@@ -27,7 +27,7 @@ jobs:
            chmod +x ./eksctl
            cp ./eksctl $HOME/bin/eksctl && export PATH=$HOME/bin/eksctl:$PATH          
            ls -l $HOME/bin/eksctl
-           ./$HOME/bin/eksctl version
+           $HOME/bin/eksctl version
            eksctl version
 
       - uses: actions/checkout@v3
